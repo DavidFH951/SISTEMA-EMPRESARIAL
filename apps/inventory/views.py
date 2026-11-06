@@ -16,7 +16,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = Activo.objects.all()
+        queryset = Activo.objects.all().order_by('-id')
 
         search = self.request.GET.get("q", "").strip()
         if search:
