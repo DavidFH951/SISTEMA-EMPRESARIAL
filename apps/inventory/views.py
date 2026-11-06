@@ -63,3 +63,4 @@ class ProductDeleteView(RoleRequiredMixin, DeleteView):
     template_name = "inventory/product_confirm_delete.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
+    
