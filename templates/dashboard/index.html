@@ -1,59 +1,49 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}Dashboard | Sistema Empresarial{% endblock %}
-{% block page_title %}Panel de control{% endblock %}
-{% block page_subtitle %}Resumen general del sistema al {{ today }}{% endblock %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
-{% endblock %}
 
 {% block content %}
-<section class="stats-grid">
-    <article class="stat-card">
-        <span class="stat-card__label">Total Usuarios</span>
-        <span class="stat-card__value">{{ total_users }}</span>
-    </article>
-
-    <article class="stat-card">
-        <span class="stat-card__label">Productos en Stock</span>
-        <span class="stat-card__value">{{ products_in_stock }}</span>
-    </article>
-
-    <article class="stat-card">
-        <span class="stat-card__label">Clientes Registrados</span>
-        <span class="stat-card__value">{{ total_clients }}</span>
-    </article>
-
-    <article class="stat-card">
-        <span class="stat-card__label">Asistencias del Día</span>
-        <span class="stat-card__value">{{ today_attendance }}</span>
-    </article>
-</section>
-
-{# Contenedores reservados para futuros gráficos y widgets #}
-<section class="widgets-grid">
-    <article class="widget">
-        <header class="widget__header">
-            <h2 class="widget__title">Movimientos de inventario</h2>
-        </header>
-        <div class="widget__body widget__body--placeholder" data-widget="inventory-chart">
-            Espacio reservado para gráfico
+<div class="container mt-4">
+    <h2 class="mb-4">Panel de Control General</h2>
+    
+    <div class="row">
+        <!-- Tarjeta de Clientes -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Clientes</h5>
+                    <h2 class="display-4 font-weight-bold">{{ total_clientes|default:"0" }}</h2>
+                </div>
+            </div>
         </div>
-    </article>
 
-    <article class="widget">
-        <header class="widget__header">
-            <h2 class="widget__title">Asistencia semanal</h2>
-        </header>
-        <div class="widget__body widget__body--placeholder" data-widget="attendance-chart">
-            Espacio reservado para gráfico
+        <!-- Tarjeta de Equipos en Inventario -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-info h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Equipos Disponibles</h5>
+                    <h2 class="display-4 font-weight-bold">{{ equipos_disponibles|default:"0" }}</h2>
+                </div>
+            </div>
         </div>
-    </article>
-</section>
-{% endblock %}
 
-{% block extra_js %}
-    <script src="{% static 'js/modules/dashboard.js' %}" defer></script>
+        <!-- Tarjeta de Tickets Abiertos -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-danger h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tickets Abiertos</h5>
+                    <h2 class="display-4 font-weight-bold">{{ tickets_abiertos|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Tickets Cerrados -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Tickets Cerrados</h5>
+                    <h2 class="display-4 font-weight-bold">{{ tickets_cerrados|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
