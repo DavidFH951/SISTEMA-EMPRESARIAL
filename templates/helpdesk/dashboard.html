@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Panel de soporte | Mesa de Ayuda{% endblock %}
+{% block page_title %}Panel de Soporte{% endblock %}
+{% block page_subtitle %}Métricas de la Mesa de Ayuda interna{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/helpdesk.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="stats-grid" data-module="helpdesk">
+    <article class="stat-card">
+        <span class="stat-card__label">Total de tickets</span>
+        <span class="stat-card__value">{{ total }}</span>
+    </article>
+    <article class="stat-card">
+        <span class="stat-card__label">Abiertos</span>
+        <span class="stat-card__value">{{ open_count }}</span>
+    </article>
+    <article class="stat-card">
+        <span class="stat-card__label">En proceso</span>
+        <span class="stat-card__value">{{ in_progress_count }}</span>
+    </article>
+    <article class="stat-card">
+        <span class="stat-card__label">Sin asignar</span>
+        <span class="stat-card__value">{{ unassigned_count }}</span>
+    </article>
+    <article class="stat-card">
+        <span class="stat-card__label">Prioridad crítica</span>
+        <span class="stat-card__value">{{ critical_count }}</span>
+    </article>
+</section>
+
+<section class="widgets-grid">
+    <article class="widget">
+        <header class="widget__header">
+            <h2 class="widget__title">Tickets por categoría</h2>
+        </header>
+        <div class="widget__body">
+            <ul class="category-breakdown">
+                {% for item in by_category %}
+                    <li class="category-breakdown__item">
+                        <span class="category-breakdown__label">{{ item.label }}</span>
+                        <span class="badge">{{ item.count }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </article>
+
+    <article class="widget">
+        <header class="widget__header">
+            <h2 class="widget__title">Tendencia de tickets</h2>
+        </header>
+        <div class="widget__body widget__body--placeholder" data-widget="helpdesk-chart">
+            Espacio reservado para gráfico
+        </div>
+    </article>
+</section>
+
+<section class="section-block">
+    <h2 class="section-title">Tickets activos recientes</h2>
+
+    <section class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Asignado a</th>
+                    <th class="data-table__actions-col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in recent_tickets %}
+                    <tr>
+                        <td><span class="ticket-code">{{ ticket.ticket_id }}</span></td>
+                        <td>{{ ticket.title }}</td>
+                        <td>
+                            <span class="badge" data-priority="{{ ticket.priority }}">
+                                {{ ticket.get_priority_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge" data-status="{{ ticket.status }}">
+                                {{ ticket.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ ticket.assignee_display }}</td>
+                        <td class="data-table__actions">
+                            <a class="btn btn--ghost btn--sm" href="{% url 'helpdesk:ticket_manage' ticket.ticket_id %}">Gestionar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="table-empty" colspan="6">No hay tickets activos.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/helpdesk.js' %}" defer></script>
+{% endblock %}

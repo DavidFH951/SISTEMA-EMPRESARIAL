@@ -1,0 +1,29 @@
+{% load static %}
+<aside class="sidebar" data-sidebar>
+    <nav class="sidebar__nav">
+        <span class="sidebar__section">Principal</span>
+        <a class="sidebar__link" href="{% url 'dashboard:index' %}">Dashboard</a>
+
+        <span class="sidebar__section">Gestión</span>
+        <a class="sidebar__link" href="{% url 'inventory:product_list' %}">Inventario</a>
+        <a class="sidebar__link" href="{% url 'clients:client_list' %}">Clientes</a>
+
+        <span class="sidebar__section">Personal</span>
+        <a class="sidebar__link" href="{% url 'attendance:panel' %}">Mi asistencia</a>
+        {% if user.is_admin or user.is_manager %}
+            <a class="sidebar__link" href="{% url 'attendance:report' %}">Reporte de asistencia</a>
+        {% endif %}
+
+        <span class="sidebar__section">Mesa de Ayuda</span>
+        <a class="sidebar__link" href="{% url 'helpdesk:ticket_list' %}">Mis tickets</a>
+        <a class="sidebar__link" href="{% url 'helpdesk:ticket_create' %}">Nuevo ticket</a>
+        {% if user.is_sistemas %}
+            <a class="sidebar__link" href="{% url 'helpdesk:dashboard' %}">Panel de soporte</a>
+        {% endif %}
+
+        {% if user.is_admin or user.is_superuser %}
+            <span class="sidebar__section">Administración</span>
+            <a class="sidebar__link" href="/admin/">Django Admin</a>
+        {% endif %}
+    </nav>
+</aside>

@@ -1,0 +1,81 @@
+/* =====================================================================
+   forms.css - Campos y formularios
+   ===================================================================== */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 640px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--color-text);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+textarea.form-input {
+    resize: vertical;
+}
+
+.form-help {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.form-error {
+    font-size: 12px;
+    color: var(--color-danger);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.form-check__input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+}
+
+.form-check__label {
+    font-size: 14px;
+    color: var(--color-text);
+}
+
+.confirm-text {
+    margin-top: 0;
+    margin-bottom: var(--space-lg);
+}

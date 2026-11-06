@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventario | Sistema Empresarial{% endblock %}
+{% block page_title %}Gestión de Inventario{% endblock %}
+{% block page_subtitle %}Productos registrados en el sistema{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/inventory.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="toolbar__search" method="get" action="{% url 'inventory:product_list' %}">
+        <input class="form-input" type="search" name="q" value="{{ search_query }}"
+               placeholder="Buscar por nombre o SKU">
+        <select class="form-input" name="stock">
+            <option value="">Todo el stock</option>
+            <option value="low" {% if stock_filter == 'low' %}selected{% endif %}>Stock bajo</option>
+            <option value="out" {% if stock_filter == 'out' %}selected{% endif %}>Sin stock</option>
+        </select>
+        <button class="btn btn--secondary" type="submit">Filtrar</button>
+    </form>
+
+    {% if user.is_admin or user.is_manager %}
+        <a class="btn btn--primary" href="{% url 'inventory:product_create' %}">Nuevo producto</a>
+    {% endif %}
+</section>
+
+<section class="table-wrapper">
+    <table class="data-table" data-module="inventory">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>SKU</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Actualizado</th>
+                {% if user.is_admin or user.is_manager %}
+                    <th class="data-table__actions-col">Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.sku }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>
+                        <span class="badge {% if product.is_low_stock %}badge--warning{% else %}badge--success{% endif %}">
+                            {{ product.stock_quantity }}
+                        </span>
+                    </td>
+                    <td>{{ product.updated_at|date:"d/m/Y H:i" }}</td>
+                    {% if user.is_admin or user.is_manager %}
+                        <td class="data-table__actions">
+                            <a class="btn btn--ghost btn--sm" href="{% url 'inventory:product_update' product.pk %}">Editar</a>
+                            <a class="btn btn--danger btn--sm" href="{% url 'inventory:product_delete' product.pk %}">Eliminar</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td class="table-empty" colspan="6">No se encontraron productos.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% if is_paginated %}
+<nav class="pagination">
+    {% if page_obj.has_previous %}
+        <a class="btn btn--ghost btn--sm" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&stock={{ stock_filter }}">Anterior</a>
+    {% endif %}
+    <span class="pagination__status">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a class="btn btn--ghost btn--sm" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&stock={{ stock_filter }}">Siguiente</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/inventory.js' %}" defer></script>
+{% endblock %}

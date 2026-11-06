@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Sistema Empresarial{% endblock %}
+{% block page_title %}Panel de control{% endblock %}
+{% block page_subtitle %}Resumen general del sistema al {{ today }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="stats-grid">
+    <article class="stat-card">
+        <span class="stat-card__label">Total Usuarios</span>
+        <span class="stat-card__value">{{ total_users }}</span>
+    </article>
+
+    <article class="stat-card">
+        <span class="stat-card__label">Productos en Stock</span>
+        <span class="stat-card__value">{{ products_in_stock }}</span>
+    </article>
+
+    <article class="stat-card">
+        <span class="stat-card__label">Clientes Registrados</span>
+        <span class="stat-card__value">{{ total_clients }}</span>
+    </article>
+
+    <article class="stat-card">
+        <span class="stat-card__label">Asistencias del Día</span>
+        <span class="stat-card__value">{{ today_attendance }}</span>
+    </article>
+</section>
+
+{# Contenedores reservados para futuros gráficos y widgets #}
+<section class="widgets-grid">
+    <article class="widget">
+        <header class="widget__header">
+            <h2 class="widget__title">Movimientos de inventario</h2>
+        </header>
+        <div class="widget__body widget__body--placeholder" data-widget="inventory-chart">
+            Espacio reservado para gráfico
+        </div>
+    </article>
+
+    <article class="widget">
+        <header class="widget__header">
+            <h2 class="widget__title">Asistencia semanal</h2>
+        </header>
+        <div class="widget__body widget__body--placeholder" data-widget="attendance-chart">
+            Espacio reservado para gráfico
+        </div>
+    </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/dashboard.js' %}" defer></script>
+{% endblock %}

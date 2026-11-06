@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}Editar producto{% else %}Nuevo producto{% endif %} | Sistema Empresarial{% endblock %}
+{% block page_title %}{% if object %}Editar producto{% else %}Nuevo producto{% endif %}{% endblock %}
+{% block page_subtitle %}Completa la información del producto{% endblock %}
+
+{% block content %}
+<section class="card">
+    <form class="form" method="post" novalidate>
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-field">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <span class="form-help">{{ field.help_text }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button class="btn btn--primary" type="submit">Guardar</button>
+            <a class="btn btn--ghost" href="{% url 'inventory:product_list' %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

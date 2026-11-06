@@ -1,0 +1,49 @@
+/* =====================================================================
+   attendance.css - Panel y reporte de asistencia
+   ===================================================================== */
+
+.attendance-panel {
+    margin-bottom: var(--space-lg);
+}
+
+.attendance-panel__status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.attendance-panel__label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+}
+
+.attendance-panel__clock {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.attendance-panel__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+    background-color: #f8fafc;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.attendance-panel__value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.attendance-panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}

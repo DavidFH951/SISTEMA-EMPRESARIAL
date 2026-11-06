@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Reporte de asistencia | Sistema Empresarial{% endblock %}
+{% block page_title %}Reporte de Asistencia{% endblock %}
+{% block page_subtitle %}Periodo: {{ start_date|date:"d/m/Y" }} - {{ end_date|date:"d/m/Y" }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="toolbar__search" method="get" action="{% url 'attendance:report' %}">
+        <select class="form-input" name="period">
+            <option value="daily" {% if period == 'daily' %}selected{% endif %}>Diario</option>
+            <option value="weekly" {% if period == 'weekly' %}selected{% endif %}>Semanal</option>
+            <option value="monthly" {% if period == 'monthly' %}selected{% endif %}>Mensual</option>
+        </select>
+        <button class="btn btn--secondary" type="submit">Aplicar</button>
+    </form>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card"><span class="stat-card__label">Total</span><span class="stat-card__value">{{ summary.total }}</span></article>
+    <article class="stat-card"><span class="stat-card__label">Presentes</span><span class="stat-card__value">{{ summary.present }}</span></article>
+    <article class="stat-card"><span class="stat-card__label">Tardanzas</span><span class="stat-card__value">{{ summary.late }}</span></article>
+    <article class="stat-card"><span class="stat-card__label">Ausentes</span><span class="stat-card__value">{{ summary.absent }}</span></article>
+    <article class="stat-card"><span class="stat-card__label">Permisos</span><span class="stat-card__value">{{ summary.leave }}</span></article>
+</section>
+
+<section class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>Fecha</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Horas</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in records %}
+                <tr>
+                    <td>{{ item.user.get_full_name|default:item.user.username }}</td>
+                    <td>{{ item.date|date:"d/m/Y" }}</td>
+                    <td>{{ item.check_in_time|time:"H:i"|default:"--:--" }}</td>
+                    <td>{{ item.check_out_time|time:"H:i"|default:"--:--" }}</td>
+                    <td>{{ item.worked_hours|default:"--" }}</td>
+                    <td>{{ item.get_status_display }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td class="table-empty" colspan="6">No hay registros para el periodo seleccionado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

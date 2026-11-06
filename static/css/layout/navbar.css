@@ -1,0 +1,74 @@
+/* =====================================================================
+   navbar.css - Barra superior de la aplicación
+   ===================================================================== */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    height: var(--navbar-height);
+    padding: 0 var(--space-lg);
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.navbar__brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.navbar__logo:hover {
+    text-decoration: none;
+    color: var(--color-primary);
+}
+
+.navbar__toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs);
+}
+
+.navbar__toggle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--color-text);
+}
+
+.navbar__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-left: auto;
+}
+
+.navbar__user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 14px;
+}
+
+.navbar__logout {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar__toggle {
+        display: flex;
+    }
+}

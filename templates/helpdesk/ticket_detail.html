@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ ticket.ticket_id }} | Mesa de Ayuda{% endblock %}
+{% block page_title %}{{ ticket.title }}{% endblock %}
+{% block page_subtitle %}{{ ticket.ticket_id }} &middot; {{ ticket.get_category_display }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/helpdesk.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="helpdesk-grid" data-module="helpdesk">
+    <div class="helpdesk-grid__main">
+        <article class="card">
+            <h2 class="section-title">Descripción</h2>
+            <p class="ticket-description">{{ ticket.description|linebreaksbr }}</p>
+        </article>
+
+        <article class="card">
+            <h2 class="section-title">Seguimiento</h2>
+
+            <ul class="comment-list">
+                {% for comment in comments %}
+                    <li class="comment {% if comment.is_internal %}comment--internal{% endif %}">
+                        <header class="comment__header">
+                            <span class="comment__author">
+                                {{ comment.author.get_full_name|default:comment.author.username }}
+                            </span>
+                            <span class="comment__date">{{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                            {% if comment.is_internal %}
+                                <span class="badge badge--warning">Nota interna</span>
+                            {% endif %}
+                        </header>
+                        <p class="comment__body">{{ comment.body|linebreaksbr }}</p>
+                    </li>
+                {% empty %}
+                    <li class="comment comment--empty">Aún no hay comentarios en este ticket.</li>
+                {% endfor %}
+            </ul>
+
+            <form class="comment-form" method="post"
+                  action="{% url 'helpdesk:comment_create' ticket.ticket_id %}">
+                {% csrf_token %}
+                <div class="form-field">
+                    <label class="form-label" for="{{ comment_form.body.id_for_label }}">Agregar seguimiento</label>
+                    {{ comment_form.body }}
+                </div>
+
+                {% if can_manage %}
+                    <div class="form-check">
+                        {{ comment_form.is_internal }}
+                        <label class="form-check__label" for="{{ comment_form.is_internal.id_for_label }}">
+                            Nota interna (solo visible para Sistemas)
+                        </label>
+                    </div>
+                {% endif %}
+
+                <button class="btn btn--primary btn--sm" type="submit">Agregar comentario</button>
+            </form>
+        </article>
+
+        <article class="card">
+            <h2 class="section-title">Adjuntos</h2>
+
+            <ul class="attachment-list">
+                {% for attachment in attachments %}
+                    <li class="attachment">
+                        <a class="attachment__link" href="{{ attachment.file.url }}" target="_blank" rel="noopener">
+                            {{ attachment.file.name }}
+                        </a>
+                        <span class="attachment__meta">
+                            {{ attachment.uploaded_by.username }} &middot; {{ attachment.uploaded_at|date:"d/m/Y H:i" }}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="attachment attachment--empty">Sin archivos adjuntos.</li>
+                {% endfor %}
+            </ul>
+
+            <form class="attachment-form" method="post" enctype="multipart/form-data"
+                  action="{% url 'helpdesk:attachment_create' ticket.ticket_id %}">
+                {% csrf_token %}
+                <div class="form-field">
+                    <label class="form-label" for="{{ attachment_form.file.id_for_label }}">Adjuntar archivo</label>
+                    {{ attachment_form.file }}
+                </div>
+                <button class="btn btn--secondary btn--sm" type="submit">Subir adjunto</button>
+            </form>
+        </article>
+    </div>
+
+    <aside class="helpdesk-grid__side">
+        <article class="card">
+            <h2 class="section-title">Detalles</h2>
+            <dl class="ticket-meta">
+                <dt class="ticket-meta__term">Código</dt>
+                <dd class="ticket-meta__value">{{ ticket.ticket_id }}</dd>
+
+                <dt class="ticket-meta__term">Estado</dt>
+                <dd class="ticket-meta__value">
+                    <span class="badge" data-status="{{ ticket.status }}">{{ ticket.get_status_display }}</span>
+                </dd>
+
+                <dt class="ticket-meta__term">Prioridad</dt>
+                <dd class="ticket-meta__value">
+                    <span class="badge" data-priority="{{ ticket.priority }}">{{ ticket.get_priority_display }}</span>
+                </dd>
+
+                <dt class="ticket-meta__term">Categoría</dt>
+                <dd class="ticket-meta__value">{{ ticket.get_category_display }}</dd>
+
+                <dt class="ticket-meta__term">Reportado por</dt>
+                <dd class="ticket-meta__value">
+                    {{ ticket.created_by.get_full_name|default:ticket.created_by.username }}
+                </dd>
+
+                <dt class="ticket-meta__term">Asignado a</dt>
+                <dd class="ticket-meta__value">
+                    {{ ticket.assignee_display }}
+                </dd>
+
+                <dt class="ticket-meta__term">Creado</dt>
+                <dd class="ticket-meta__value">{{ ticket.created_at|date:"d/m/Y H:i" }}</dd>
+
+                <dt class="ticket-meta__term">Resuelto</dt>
+                <dd class="ticket-meta__value">
+                    {{ ticket.resolved_at|date:"d/m/Y H:i"|default:"Pendiente" }}
+                </dd>
+            </dl>
+
+            {% if can_manage %}
+                <a class="btn btn--primary btn--block" href="{% url 'helpdesk:ticket_manage' ticket.ticket_id %}">
+                    Gestionar ticket
+                </a>
+            {% endif %}
+
+            <a class="btn btn--ghost btn--block" href="{% url 'helpdesk:ticket_list' %}">Volver al listado</a>
+        </article>
+    </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/helpdesk.js' %}" defer></script>
+{% endblock %}

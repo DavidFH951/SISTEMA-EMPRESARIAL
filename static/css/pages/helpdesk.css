@@ -1,0 +1,254 @@
+/* =====================================================================
+   helpdesk.css - Mesa de Ayuda interna
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   Código de ticket
+   --------------------------------------------------------------------- */
+.ticket-code {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    background-color: #eef2ff;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------
+   Etiquetas de prioridad y estado (basadas en data-attributes)
+   --------------------------------------------------------------------- */
+.badge[data-priority="LOW"] {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.badge[data-priority="MEDIUM"] {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge[data-priority="HIGH"] {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+.badge[data-priority="CRITICAL"] {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.badge[data-status="OPEN"] {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge[data-status="IN_PROGRESS"] {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.badge[data-status="ON_HOLD"] {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.badge[data-status="RESOLVED"] {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.badge[data-status="CLOSED"] {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+/* ---------------------------------------------------------------------
+   Disposición de dos columnas (detalle del ticket)
+   --------------------------------------------------------------------- */
+.helpdesk-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: var(--space-lg);
+    align-items: start;
+}
+
+.helpdesk-grid__main,
+.helpdesk-grid__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+    .helpdesk-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Descripción y metadatos
+   --------------------------------------------------------------------- */
+.ticket-description {
+    margin: 0;
+    white-space: normal;
+    line-height: 1.6;
+}
+
+.ticket-meta {
+    display: grid;
+    grid-template-columns: auto;
+    gap: var(--space-xs);
+    margin: 0 0 var(--space-lg);
+}
+
+.ticket-meta__term {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+}
+
+.ticket-meta__value {
+    margin: 0;
+    font-size: 14px;
+}
+
+.helpdesk-grid__side .btn--block + .btn--block {
+    margin-top: var(--space-sm);
+}
+
+/* ---------------------------------------------------------------------
+   Seguimiento (comentarios)
+   --------------------------------------------------------------------- */
+.comment-list {
+    list-style: none;
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.comment {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    background-color: #f8fafc;
+}
+
+.comment--internal {
+    border-left-color: var(--color-warning);
+    background-color: #fffbeb;
+}
+
+.comment--empty {
+    border-left-color: var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.comment__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.comment__author {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.comment__date {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.comment__body {
+    margin: 0;
+    font-size: 14px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------------------
+   Adjuntos
+   --------------------------------------------------------------------- */
+.attachment-list {
+    list-style: none;
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.attachment {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+}
+
+.attachment--empty {
+    color: var(--color-text-muted);
+    border-style: dashed;
+}
+
+.attachment__meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.attachment-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+}
+
+/* ---------------------------------------------------------------------
+   Panel de soporte
+   --------------------------------------------------------------------- */
+.category-breakdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.category-breakdown__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+}
+
+.category-breakdown__label {
+    color: var(--color-text);
+}
+
+.section-block {
+    margin-top: var(--space-lg);
+}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mi asistencia | Sistema Empresarial{% endblock %}
+{% block page_title %}Control de Asistencia{% endblock %}
+{% block page_subtitle %}Registra tu entrada y salida del día {{ today }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="card attendance-panel" data-module="attendance">
+    <div class="attendance-panel__status">
+        <span class="attendance-panel__label">Estado de hoy</span>
+        <span class="badge">{{ record.get_status_display|default:"Sin registro" }}</span>
+    </div>
+
+    <div class="attendance-panel__clock">
+        <div class="attendance-panel__item">
+            <span class="attendance-panel__label">Entrada</span>
+            <span class="attendance-panel__value">{{ record.check_in_time|time:"H:i"|default:"--:--" }}</span>
+        </div>
+        <div class="attendance-panel__item">
+            <span class="attendance-panel__label">Salida</span>
+            <span class="attendance-panel__value">{{ record.check_out_time|time:"H:i"|default:"--:--" }}</span>
+        </div>
+        <div class="attendance-panel__item">
+            <span class="attendance-panel__label">Horas trabajadas</span>
+            <span class="attendance-panel__value">{{ record.worked_hours|default:"--" }}</span>
+        </div>
+    </div>
+
+    <div class="attendance-panel__actions">
+        <form method="post" action="{% url 'attendance:check_in' %}">
+            {% csrf_token %}
+            <button class="btn btn--primary" type="submit" {% if record.check_in_time %}disabled{% endif %}>
+                Registrar entrada
+            </button>
+        </form>
+        <form method="post" action="{% url 'attendance:check_out' %}">
+            {% csrf_token %}
+            <button class="btn btn--secondary" type="submit" {% if not record.check_in_time or record.check_out_time %}disabled{% endif %}>
+                Registrar salida
+            </button>
+        </form>
+    </div>
+</section>
+
+<section class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in recent_records %}
+                <tr>
+                    <td>{{ item.date|date:"d/m/Y" }}</td>
+                    <td>{{ item.check_in_time|time:"H:i"|default:"--:--" }}</td>
+                    <td>{{ item.check_out_time|time:"H:i"|default:"--:--" }}</td>
+                    <td>{{ item.get_status_display }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td class="table-empty" colspan="4">Aún no tienes registros de asistencia.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/attendance.js' %}" defer></script>
+{% endblock %}

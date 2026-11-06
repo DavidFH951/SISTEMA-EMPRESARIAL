@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión | Sistema Empresarial</title>
+    <link rel="stylesheet" href="{% static 'css/layout/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/login.css' %}">
+</head>
+<body class="login-body">
+    <main class="login">
+        <section class="login__card">
+            <header class="login__header">
+                <h1 class="login__title">CoreSistema</h1>
+                <p class="login__subtitle">Accede con tus credenciales corporativas</p>
+            </header>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert--error">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+
+            <form class="login__form" method="post" action="{% url 'users:login' %}" novalidate>
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">Usuario</label>
+                    {{ form.username }}
+                    {% for error in form.username.errors %}
+                        <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="{{ form.password.id_for_label }}">Contraseña</label>
+                    {{ form.password }}
+                    {% for error in form.password.errors %}
+                        <span class="form-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+
+                <button class="btn btn--primary btn--block" type="submit">Iniciar sesión</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

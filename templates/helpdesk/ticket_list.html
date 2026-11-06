@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mesa de Ayuda | Sistema Empresarial{% endblock %}
+{% block page_title %}Mesa de Ayuda{% endblock %}
+{% block page_subtitle %}
+    {% if can_manage %}Tickets de todas las áreas del sistema{% else %}Tickets de soporte que has reportado{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/helpdesk.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="toolbar" data-module="helpdesk">
+    <form class="toolbar__search" method="get" action="{% url 'helpdesk:ticket_list' %}">
+        <input class="form-input" type="search" name="q" value="{{ search_query }}"
+               placeholder="Buscar por código o título">
+
+        {% if can_manage %}
+            <select class="form-input" name="category">
+                <option value="">Toda categoría</option>
+                {% for value, label in categories %}
+                    <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="form-input" name="status">
+                <option value="">Todo estado</option>
+                {% for value, label in statuses %}
+                    <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="form-input" name="priority">
+                <option value="">Toda prioridad</option>
+                {% for value, label in priorities %}
+                    <option value="{{ value }}" {% if priority_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        <button class="btn btn--secondary" type="submit">Filtrar</button>
+    </form>
+
+    <a class="btn btn--primary" href="{% url 'helpdesk:ticket_create' %}">Nuevo ticket</a>
+</section>
+
+<section class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                {% if can_manage %}
+                    <th>Reportado por</th>
+                    <th>Asignado a</th>
+                {% endif %}
+                <th>Creado</th>
+                <th class="data-table__actions-col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td><span class="ticket-code">{{ ticket.ticket_id }}</span></td>
+                    <td>{{ ticket.title }}</td>
+                    <td>{{ ticket.get_category_display }}</td>
+                    <td>
+                        <span class="badge" data-priority="{{ ticket.priority }}">
+                            {{ ticket.get_priority_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" data-status="{{ ticket.status }}">
+                            {{ ticket.get_status_display }}
+                        </span>
+                    </td>
+                    {% if can_manage %}
+                        <td>{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</td>
+                        <td>{{ ticket.assignee_display }}</td>
+                    {% endif %}
+                    <td>{{ ticket.created_at|date:"d/m/Y H:i" }}</td>
+                    <td class="data-table__actions">
+                        <a class="btn btn--ghost btn--sm" href="{% url 'helpdesk:ticket_detail' ticket.ticket_id %}">Ver</a>
+                        {% if can_manage %}
+                            <a class="btn btn--ghost btn--sm" href="{% url 'helpdesk:ticket_manage' ticket.ticket_id %}">Gestionar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td class="table-empty" colspan="9">No hay tickets que mostrar.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/helpdesk.js' %}" defer></script>
+{% endblock %}

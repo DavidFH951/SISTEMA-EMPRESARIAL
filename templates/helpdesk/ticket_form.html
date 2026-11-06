@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Nuevo ticket | Mesa de Ayuda{% endblock %}
+{% block page_title %}Registrar ticket{% endblock %}
+{% block page_subtitle %}Describe tu incidente o requerimiento de servicio{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/pages/helpdesk.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="card">
+    <form class="form" method="post" novalidate data-module="helpdesk">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-field">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <span class="form-help">{{ field.help_text }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button class="btn btn--primary" type="submit">Registrar ticket</button>
+            <a class="btn btn--ghost" href="{% url 'helpdesk:ticket_list' %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/modules/helpdesk.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Clientes | Sistema Empresarial{% endblock %}
+{% block page_title %}Directorio de Clientes{% endblock %}
+{% block page_subtitle %}Información de contacto de clientes registrados{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="toolbar__search" method="get" action="{% url 'clients:client_list' %}">
+        <input class="form-input" type="search" name="q" value="{{ search_query }}"
+               placeholder="Buscar por empresa, contacto o correo">
+        <button class="btn btn--secondary" type="submit">Buscar</button>
+    </form>
+</section>
+
+<section class="table-wrapper">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Empresa</th>
+                <th>Contacto</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Registrado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.company_name }}</td>
+                    <td>{{ client.contact_name }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.phone|default:"-" }}</td>
+                    <td>{{ client.address|default:"-" }}</td>
+                    <td>{{ client.registered_at|date:"d/m/Y" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td class="table-empty" colspan="6">No se encontraron clientes.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% if is_paginated %}
+<nav class="pagination">
+    {% if page_obj.has_previous %}
+        <a class="btn btn--ghost btn--sm" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">Anterior</a>
+    {% endif %}
+    <span class="pagination__status">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a class="btn btn--ghost btn--sm" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">Siguiente</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

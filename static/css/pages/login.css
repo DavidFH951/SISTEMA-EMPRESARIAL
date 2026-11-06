@@ -1,0 +1,53 @@
+/* =====================================================================
+   login.css - Pantalla de inicio de sesión
+   ===================================================================== */
+
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+}
+
+.login {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.login__card {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-xl);
+}
+
+.login__header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.login__title {
+    font-size: 24px;
+    color: var(--color-primary-dark);
+}
+
+.login__subtitle {
+    margin-top: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.login__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.login__form .form-input {
+    padding: 11px 14px;
+}

@@ -1,0 +1,25 @@
+{% load static %}
+<header class="navbar">
+    <div class="navbar__brand">
+        <a class="navbar__logo" href="{% url 'dashboard:index' %}">CoreSistema</a>
+    </div>
+
+    <button class="navbar__toggle" type="button" data-sidebar-toggle aria-label="Alternar menú">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+    </button>
+
+    <nav class="navbar__menu">
+        {% if user.is_authenticated %}
+            <span class="navbar__user">
+                {{ user.get_full_name|default:user.username }}
+                <span class="badge">{{ user.get_role_display }}</span>
+            </span>
+            <form class="navbar__logout" method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn--ghost btn--sm" type="submit">Salir</button>
+            </form>
+        {% endif %}
+    </nav>
+</header>

@@ -1,0 +1,17 @@
+/* =====================================================================
+   inventory.css - Gestión de inventario
+   ===================================================================== */
+
+.toolbar__search .form-input {
+    min-width: 220px;
+    width: auto;
+}
+
+.toolbar__search select.form-input {
+    min-width: 160px;
+}
+
+.data-table td .badge {
+    min-width: 32px;
+    text-align: center;
+}
