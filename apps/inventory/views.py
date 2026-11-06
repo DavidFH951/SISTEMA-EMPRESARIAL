@@ -1,27 +1,12 @@
-"""Vistas para el panel de control (Dashboard)."""
+"""Vistas de la aplicación inventory."""
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.db.models import Q
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from apps.users.mixins import RoleRequiredMixin
 
-from apps.clients.models import Cliente
-from apps.helpdesk.models import Ticket
-from apps.inventory.models import Activo  # ← Aquí está la corrección
+from .models import Activo
 
-class DashboardView(LoginRequiredMixin, TemplateView):
-    """Vista principal del panel de control."""
-    template_name = "dashboard/index.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Estadísticas básicas
-        context["total_clientes"] = Cliente.objects.count()
-        context["tickets_abiertos"] = Ticket.objects.filter(estado="abierto").count()
-        context["tickets_cerrados"] = Ticket.objects.filter(estado="cerrado").count()
-        
-        # Equipos disponibles (ajustado al nuevo modelo)
-        context["equipos_disponibles"] = Activo.objects.filter(disponibilidad="DISPONIBLE").count()
-        
-        return context
 
 class ProductListView(LoginRequiredMixin, ListView):
     """Listado de activos con búsqueda y filtro."""
@@ -57,7 +42,7 @@ class ProductListView(LoginRequiredMixin, ListView):
 class ProductCreateView(RoleRequiredMixin, CreateView):
     """Alta de activos."""
     model = Activo
-    fields = '__all__'  # Genera el formulario automático sin chocar con forms.py
+    fields = '__all__'  
     template_name = "inventory/product_form.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
