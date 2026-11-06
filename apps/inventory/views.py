@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-
+from apps.inventory.models import Activo
 from apps.users.mixins import RoleRequiredMixin
 
 from .forms import ProductForm
@@ -69,3 +69,5 @@ class ProductDeleteView(RoleRequiredMixin, DeleteView):
     template_name = "inventory/product_confirm_delete.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
+
+activos = Activo.objects.all()
