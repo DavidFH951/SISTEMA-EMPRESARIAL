@@ -1,10 +1,8 @@
-"""Rutas de la aplicación dashboard."""
 from django.urls import path
-
-from . import views
+from .views import DashboardView
 
 app_name = "dashboard"
 
 urlpatterns = [
-    path("", views.dashboard_index, name="index"),
+    path("", DashboardView.as_view(), name="index"),
 ]
