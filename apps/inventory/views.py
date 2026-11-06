@@ -3,35 +3,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from apps.inventory.models import Activo
 from apps.users.mixins import RoleRequiredMixin
 
-from .forms import ProductForm
-from .models import Product
+# Importamos solo Activo, ya no Product ni ProductForm
+from .models import Activo
 
 
 class ProductListView(LoginRequiredMixin, ListView):
-    """Listado de productos con búsqueda y filtro por nivel de stock."""
-
-    model = Product
+    """Listado de activos con búsqueda y filtro."""
+    model = Activo
     template_name = "inventory/product_list.html"
     context_object_name = "products"
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Activo.objects.all()
 
         search = self.request.GET.get("q", "").strip()
         if search:
             queryset = queryset.filter(
-                Q(name__icontains=search) | Q(sku__icontains=search)
+                Q(n_serie__icontains=search) | Q(codigo_interno__icontains=search)
             )
 
         stock_filter = self.request.GET.get("stock", "").strip()
-        if stock_filter == "low":
-            queryset = queryset.filter(stock_quantity__lte=5)
-        elif stock_filter == "out":
-            queryset = queryset.filter(stock_quantity=0)
+        if stock_filter == "out":
+            queryset = queryset.filter(disponibilidad="NO DISPONIBLE")
+        elif stock_filter == "low":
+            queryset = queryset.filter(disponibilidad="DISPONIBLE")
 
         return queryset
 
@@ -43,31 +41,26 @@ class ProductListView(LoginRequiredMixin, ListView):
 
 
 class ProductCreateView(RoleRequiredMixin, CreateView):
-    """Alta de productos (solo Admin y Gerente)."""
-
-    model = Product
-    form_class = ProductForm
+    """Alta de activos."""
+    model = Activo
+    fields = '__all__'  # Genera el formulario automático sin chocar con forms.py
     template_name = "inventory/product_form.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
 
 
 class ProductUpdateView(RoleRequiredMixin, UpdateView):
-    """Edición de productos (solo Admin y Gerente)."""
-
-    model = Product
-    form_class = ProductForm
+    """Edición de activos."""
+    model = Activo
+    fields = '__all__'
     template_name = "inventory/product_form.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
 
 
 class ProductDeleteView(RoleRequiredMixin, DeleteView):
-    """Eliminación de productos (solo Admin y Gerente)."""
-
-    model = Product
+    """Eliminación de activos."""
+    model = Activo
     template_name = "inventory/product_confirm_delete.html"
     success_url = reverse_lazy("inventory:product_list")
     allowed_roles = ("ADMIN", "MANAGER")
-
-activos = Activo.objects.all()
